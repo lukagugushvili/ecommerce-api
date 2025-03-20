@@ -22,15 +22,36 @@ type RemoveProductResponse {
   product: Product
 }
 
+type Category {
+  _id: ID!
+  name: String!
+  description: String!
+}
+
+type UpdateCategoryResponse {
+  message: String!
+  category: Category!
+}
+
+type RemoveCategoryResponse {
+  message: String!
+  category: Category!
+}
+
 type Query {
   products: [Product!]!
   product(id: ID!): Product!
+  categories: [Category!]!
+  category(id: ID!): Category!
 }
 
 type Mutation {
   createProduct(createProductInput: CreateProductInput!): Product!
   updateProduct(id: ID!, updateProductInput: UpdateProductInput!): UpdateProductResponse!
   removeProduct(id: ID!): RemoveProductResponse!
+  createCategory(createCategoryInput: CreateCategoryInput!): Category!
+  updateCategory(id: ID!, updateCategoryInput: UpdateCategoryInput!): UpdateCategoryResponse!
+  removeCategory(id: ID!): RemoveCategoryResponse!
 }
 
 input CreateProductInput {
@@ -49,4 +70,14 @@ input UpdateProductInput {
   category: String
   stock: Int
   images: [String!]
+}
+
+input CreateCategoryInput {
+  name: String!
+  description: String
+}
+
+input UpdateCategoryInput {
+  name: String
+  description: String
 }

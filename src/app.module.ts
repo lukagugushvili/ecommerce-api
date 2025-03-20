@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
       context: ({ req }) => ({ req }),
     }),
     ProductsModule,
+    CategoriesModule,
   ],
 })
 export class AppModule {}
