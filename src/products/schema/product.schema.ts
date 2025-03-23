@@ -1,6 +1,7 @@
 import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
+import { Category } from 'src/categories/schema/category.schema';
 
 @ObjectType()
 @Schema({ timestamps: true })
@@ -20,9 +21,9 @@ export class Product extends Document {
   @Prop({ required: true })
   price: number;
 
-  @Field()
-  @Prop({ required: true })
-  category: string;
+  @Field(() => Category, { nullable: true })
+  @Prop({ type: Types.ObjectId, ref: 'Category', required: true })
+  category?: Types.ObjectId;
 
   @Field(() => Int)
   @Prop({ default: 0 })

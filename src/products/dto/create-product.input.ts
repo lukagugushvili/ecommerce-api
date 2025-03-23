@@ -18,7 +18,7 @@ export class CreateProductInput {
   @IsNotEmpty()
   price: number;
 
-  @Field()
+  @Field({ nullable: true })
   @IsString()
   @IsNotEmpty()
   category: string;

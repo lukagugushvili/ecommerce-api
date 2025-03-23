@@ -8,13 +8,13 @@ export class Category extends Document {
   @Field(() => ID)
   _id: string;
 
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   @Field()
   name: string;
 
   @Prop({ default: '' })
-  @Field()
-  description: string;
+  @Field({ nullable: true })
+  description?: string;
 }
 
 export const CategorySchema = SchemaFactory.createForClass(Category);

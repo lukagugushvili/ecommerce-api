@@ -2,12 +2,18 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Category {
+  _id: ID!
+  name: String!
+  description: String
+}
+
 type Product {
   _id: ID!
   name: String!
   description: String!
   price: Int!
-  category: String!
+  category: Category
   stock: Int!
   images: [String!]!
 }
@@ -22,12 +28,6 @@ type RemoveProductResponse {
   product: Product
 }
 
-type Category {
-  _id: ID!
-  name: String!
-  description: String!
-}
-
 type UpdateCategoryResponse {
   message: String!
   category: Category!
@@ -36,6 +36,13 @@ type UpdateCategoryResponse {
 type RemoveCategoryResponse {
   message: String!
   category: Category!
+}
+
+type User {
+  _id: ID!
+  userName: String!
+  email: String!
+  password: String!
 }
 
 type Query {
@@ -52,13 +59,14 @@ type Mutation {
   createCategory(createCategoryInput: CreateCategoryInput!): Category!
   updateCategory(id: ID!, updateCategoryInput: UpdateCategoryInput!): UpdateCategoryResponse!
   removeCategory(id: ID!): RemoveCategoryResponse!
+  createUser(createUserInput: CreateUserInput!): User!
 }
 
 input CreateProductInput {
   name: String!
   description: String!
   price: Int!
-  category: String!
+  category: String
   stock: Int!
   images: [String!]!
 }
@@ -80,4 +88,10 @@ input CreateCategoryInput {
 input UpdateCategoryInput {
   name: String
   description: String
+}
+
+input CreateUserInput {
+  username: String!
+  email: String!
+  password: String!
 }
