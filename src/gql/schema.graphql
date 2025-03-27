@@ -45,11 +45,23 @@ type User {
   password: String!
 }
 
+type Cart {
+  _id: ID!
+  user: User!
+  products: [Product!]!
+  totalPrice: Int!
+}
+
+type ClearCartResponse {
+  message: String!
+}
+
 type Query {
   products: [Product!]!
   product(id: ID!): Product!
   categories: [Category!]!
   category(id: ID!): Category!
+  getCart(userId: ID!): Cart
 }
 
 type Mutation {
@@ -60,6 +72,9 @@ type Mutation {
   updateCategory(id: ID!, updateCategoryInput: UpdateCategoryInput!): UpdateCategoryResponse!
   removeCategory(id: ID!): RemoveCategoryResponse!
   createUser(createUserInput: CreateUserInput!): User!
+  addToCart(userId: ID!, productId: ID!): Cart!
+  removeFromCart(userId: ID!, productId: ID!): Cart!
+  clearCart(userId: ID!): ClearCartResponse!
 }
 
 input CreateProductInput {
