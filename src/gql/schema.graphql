@@ -56,12 +56,28 @@ type ClearCartResponse {
   message: String!
 }
 
+type Order {
+  _id: ID!
+  user: User!
+  products: [Product!]!
+  totalPrice: Int!
+  status: OrderStatus!
+}
+
+"""Order status enum"""
+enum OrderStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+}
+
 type Query {
   products: [Product!]!
   product(id: ID!): Product!
   categories: [Category!]!
   category(id: ID!): Category!
   getCart(userId: ID!): Cart
+  orders(userId: ID!): [Order!]!
 }
 
 type Mutation {
@@ -75,6 +91,8 @@ type Mutation {
   addToCart(userId: ID!, productId: ID!): Cart!
   removeFromCart(userId: ID!, productId: ID!): Cart!
   clearCart(userId: ID!): ClearCartResponse!
+  createOrder(userId: ID!): Order!
+  updateOrderStatus(orderId: ID!, status: OrderStatus!): Order!
 }
 
 input CreateProductInput {
