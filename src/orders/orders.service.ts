@@ -10,6 +10,7 @@ import { Order } from './schema/order.schema';
 import { Model } from 'mongoose';
 import { CartService } from 'src/cart/cart.service';
 import { OrderStatus } from 'src/enums/product-status.enum';
+import { UpdatePaymentStatusInput } from './dto/update-payment-status.input';
 
 @Injectable()
 export class OrdersService {
@@ -60,7 +61,7 @@ export class OrdersService {
         })
         .exec();
 
-      if (!orders || (await orders).length === 0) {
+      if (!orders) {
         throw new NotFoundException('No orders found for this user');
       }
 
@@ -93,6 +94,31 @@ export class OrdersService {
       console.error(`Error updating order status: ${error.message}`);
       throw new InternalServerErrorException(
         `Failed to update order status: ${error.message}`,
+      );
+    }
+  }
+
+  async updatePaymentStatus(
+    updatePaymentStatusInput: UpdatePaymentStatusInput,
+  ): Promise<Order> {
+    try {
+      const { orderId, paymentStatus } = updatePaymentStatusInput;
+
+      const updateStatus = await this.orderModel
+        .findByIdAndUpdate(
+          orderId,
+          { paymentStatus: paymentStatus },
+          { new: true },
+        )
+        .exec();
+
+      if (!updateStatus) throw new NotFoundException('Order not found');
+
+      return updateStatus;
+    } catch (error) {
+      console.error(`Error updating payment status: ${error.message}`);
+      throw new InternalServerErrorException(
+        `Failed to update payment status: ${error.message}`,
       );
     }
   }

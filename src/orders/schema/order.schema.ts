@@ -1,6 +1,7 @@
 import { Int, Field, ID, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
+import { PaymentStatus } from 'src/enums/payment-status.enum';
 import { OrderStatus } from 'src/enums/product-status.enum';
 import { Product } from 'src/products/schema/product.schema';
 import { User } from 'src/users/schema/user.schema';
@@ -26,6 +27,10 @@ export class Order extends Document {
   @Prop({ enum: OrderStatus, default: OrderStatus.PENDING, required: true })
   @Field(() => OrderStatus)
   status: OrderStatus;
+
+  @Prop({ enum: PaymentStatus, default: PaymentStatus.PENDING, required: true })
+  @Field(() => PaymentStatus)
+  paymentStatus: PaymentStatus;
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);

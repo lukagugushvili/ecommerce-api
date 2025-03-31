@@ -2,6 +2,7 @@ import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
 import { OrdersService } from './orders.service';
 import { Order } from './schema/order.schema';
 import { OrderStatus } from 'src/enums/product-status.enum';
+import { UpdatePaymentStatusInput } from './dto/update-payment-status.input';
 
 @Resolver(() => Order)
 export class OrdersResolver {
@@ -27,5 +28,13 @@ export class OrdersResolver {
     @Args('status', { type: () => OrderStatus }) status: OrderStatus,
   ): Promise<Order> {
     return this.ordersService.updateOrderStatus(orderId, status);
+  }
+
+  @Mutation(() => Order)
+  async updatePaymentStatus(
+    @Args('updatePaymentStatusInput')
+    updatePaymentStatusInput: UpdatePaymentStatusInput,
+  ): Promise<Order> {
+    return this.ordersService.updatePaymentStatus(updatePaymentStatusInput);
   }
 }

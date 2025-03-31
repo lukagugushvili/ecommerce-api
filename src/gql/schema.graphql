@@ -62,6 +62,7 @@ type Order {
   products: [Product!]!
   totalPrice: Int!
   status: OrderStatus!
+  paymentStatus: PaymentStatus!
 }
 
 """Order status enum"""
@@ -69,6 +70,17 @@ enum OrderStatus {
   PENDING
   COMPLETED
   CANCELLED
+}
+
+"""Payment status enum"""
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+}
+
+type PaymentResponse {
+  client_secret: String
 }
 
 type Query {
@@ -93,6 +105,8 @@ type Mutation {
   clearCart(userId: ID!): ClearCartResponse!
   createOrder(userId: ID!): Order!
   updateOrderStatus(orderId: ID!, status: OrderStatus!): Order!
+  updatePaymentStatus(updatePaymentStatusInput: UpdatePaymentStatusInput!): Order!
+  payment(amount: Float!): PaymentResponse!
 }
 
 input CreateProductInput {
@@ -127,4 +141,9 @@ input CreateUserInput {
   username: String!
   email: String!
   password: String!
+}
+
+input UpdatePaymentStatusInput {
+  orderId: String!
+  paymentStatus: PaymentStatus!
 }
