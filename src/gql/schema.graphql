@@ -40,9 +40,16 @@ type RemoveCategoryResponse {
 
 type User {
   _id: ID!
+  role: UserRoles!
   userName: String!
   email: String!
   password: String!
+}
+
+"""Roles for users"""
+enum UserRoles {
+  USER
+  ADMIN
 }
 
 type Cart {
@@ -83,6 +90,16 @@ type PaymentResponse {
   client_secret: String
 }
 
+type RegisterResponse {
+  message: String!
+  ID: String!
+}
+
+type LoginResponse {
+  message: String!
+  access_token: String!
+}
+
 type Query {
   products: [Product!]!
   product(id: ID!): Product!
@@ -107,6 +124,8 @@ type Mutation {
   updateOrderStatus(orderId: ID!, status: OrderStatus!): Order!
   updatePaymentStatus(updatePaymentStatusInput: UpdatePaymentStatusInput!): Order!
   payment(amount: Float!): PaymentResponse!
+  register(registerUser: CreateUserInput!): RegisterResponse!
+  login(loginInput: LoginInput!): LoginResponse!
 }
 
 input CreateProductInput {
@@ -138,7 +157,7 @@ input UpdateCategoryInput {
 }
 
 input CreateUserInput {
-  username: String!
+  userName: String!
   email: String!
   password: String!
 }
@@ -146,4 +165,9 @@ input CreateUserInput {
 input UpdatePaymentStatusInput {
   orderId: String!
   paymentStatus: PaymentStatus!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
 }

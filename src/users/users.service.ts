@@ -7,6 +7,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schema/user.schema';
 import { Model } from 'mongoose';
 import { CreateUserInput } from './dto/create-user.input';
+import { UserRoles } from 'src/enums/user-roles.enum';
 
 @Injectable()
 export class UsersService {
@@ -22,7 +23,10 @@ export class UsersService {
 
       if (emailInUse) throw new BadRequestException('Email already exists');
 
-      const user = await this.userModel.create(createUserInput);
+      const user = await this.userModel.create({
+        ...createUserInput,
+        role: UserRoles.USER,
+      });
       await user.save();
 
       return user;
