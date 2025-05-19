@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateCategoryInput } from './dto/create-category.input';
 import { UpdateCategoryInput } from './dto/update-category.input';
 import { InjectModel } from '@nestjs/mongoose';
@@ -19,8 +23,10 @@ export class CategoriesService {
 
       return category;
     } catch (error) {
-      console.error(`Error creating category: ${error.message}`);
-      throw new Error('Could not create category');
+      console.error(`Error creating category: ${error.message}!`);
+      throw new BadRequestException(
+        `Could not create category: ${error.message}!`,
+      );
     }
   }
 
@@ -28,7 +34,7 @@ export class CategoriesService {
     const categories = await this.categoryModel.find().exec();
 
     if (!categories || categories.length === 0) {
-      throw new NotFoundException('Categories not found');
+      throw new NotFoundException('Categories not found!');
     }
 
     return categories;
@@ -37,7 +43,7 @@ export class CategoriesService {
   async findOne(id: string): Promise<Category> {
     const category = await this.categoryModel.findById(id).exec();
 
-    if (!category) throw new NotFoundException('Categories not found');
+    if (!category) throw new NotFoundException('Categories not found!');
 
     return category;
   }
@@ -52,7 +58,7 @@ export class CategoriesService {
         .exec();
 
       if (!updatedCategory) {
-        throw new NotFoundException('Category not found');
+        throw new NotFoundException('Category not found!');
       }
 
       return {
@@ -60,8 +66,10 @@ export class CategoriesService {
         category: updatedCategory,
       };
     } catch (error) {
-      console.error(`Error updating category: ${error.message}`);
-      throw new Error('Could not update category');
+      console.error(`Error updating category: ${error.message}!`);
+      throw new BadRequestException(
+        `Could not update category: ${error.message} `,
+      );
     }
   }
 
@@ -70,7 +78,7 @@ export class CategoriesService {
       const category = await this.categoryModel.findByIdAndDelete(id).exec();
 
       if (!category) {
-        throw new NotFoundException('Category not found');
+        throw new NotFoundException('Category not found!');
       }
 
       return {
@@ -79,7 +87,9 @@ export class CategoriesService {
       };
     } catch (error) {
       console.error(`Error removing category: ${error.message}`);
-      throw new Error('Could not deleted category');
+      throw new BadRequestException(
+        `Could not deleted category: ${error.message}`,
+      );
     }
   }
 }

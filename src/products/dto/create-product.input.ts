@@ -30,7 +30,6 @@ export class CreateProductInput {
 
   @Field(() => [String])
   @IsArray()
-  @IsNotEmpty()
   @IsString({ each: true })
   images: string[];
 }

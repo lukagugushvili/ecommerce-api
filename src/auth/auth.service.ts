@@ -21,7 +21,7 @@ export class AuthService {
   ) {}
 
   async register(registerUser: CreateUserInput): Promise<RegisterResponse> {
-    const { email, password } = registerUser;
+    const { password } = registerUser;
     try {
       const saltRounds = Number(process.env.BCRYPT_SALT_ROUNDS) || 10;
       const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -33,9 +33,9 @@ export class AuthService {
 
       return { message: 'Registration successfully', ID: registered.id };
     } catch (error) {
-      console.error(`Error registering user: ${error.message}`);
+      console.error(`Error registering user: ${error.message}!`);
       throw new BadRequestException(
-        `Could not register user: ${error.message}`,
+        `Could not register user: ${error.message}!`,
       );
     }
   }
@@ -44,11 +44,11 @@ export class AuthService {
     const { email, password } = loginInput;
     try {
       const user = await this.userService.findUserByEmail(email);
-      if (!user) throw new UnauthorizedException('Invalid credentials');
+      if (!user) throw new UnauthorizedException('Invalid credentials!');
 
       const isPasswordsEqual = await bcrypt.compare(password, user.password);
       if (!isPasswordsEqual) {
-        throw new UnauthorizedException('Invalid credentials');
+        throw new UnauthorizedException('Invalid credentials!');
       }
 
       const payload = { sub: user.id, email, role: user.role };
@@ -59,9 +59,9 @@ export class AuthService {
         access_token,
       };
     } catch (error) {
-      console.error(`Login error: ${error.message}`);
+      console.error(`Login error: ${error.message}!`);
       throw new BadRequestException(
-        'Login failed. please check your credentials',
+        `Login failed. please check your credentials: ${error.message}!`,
       );
     }
   }
@@ -70,12 +70,8 @@ export class AuthService {
     const user = await this.userService.findUserByEmail(email);
     if (!user) return null;
 
-    console.log('user', user);
-
     const arePasswordsEqual = await bcrypt.compare(password, user.password);
     if (!arePasswordsEqual) return null;
-
-    console.log('arePasswordsEqual', arePasswordsEqual);
 
     return user;
   }

@@ -12,7 +12,7 @@ export class OrdersResolver {
   async createOrder(
     @Args('userId', { type: () => ID }) userId: string,
   ): Promise<Order> {
-    return await this.ordersService.createOrder(userId);
+    return this.ordersService.createOrder(userId);
   }
 
   @Query(() => [Order], { name: 'orders' })

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Cart } from './schema/cart.schema';
 import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
@@ -24,42 +28,33 @@ export class CartService {
       }
 
       const product = await this.productModel.findById(productId);
-      if (!product) throw new NotFoundException('Product not found');
+      if (!product) throw new NotFoundException('Product not found!');
 
       cart.products.push(new Types.ObjectId(productId));
       cart.totalPrice += product.price;
-      await cart.save();
 
-      await (
-        await cart.populate({
-          path: 'products',
-          model: 'Product',
-          select: 'name price description',
-        })
-      ).populate('user', 'email');
+      await cart.populate(['user', 'products']);
+
+      await cart.save();
 
       return cart;
     } catch (error) {
-      console.error(`Error adding to cart: ${error.message}`);
-      throw new Error('Could not add to cart');
+      console.error(`Error adding to cart: ${error.message}!`);
+      throw new BadRequestException(`Could not add to cart ${error.message}!`);
     }
   }
 
   async getCart(userId: string): Promise<Cart | null> {
     return await this.cartModel
       .findOne({ user: userId })
-      .populate({
-        path: 'products',
-        model: 'Product',
-        select: 'name price description',
-      })
+      .populate(['user', 'products'])
       .exec();
   }
 
   async removeFromCart(userId: string, productId: string): Promise<Cart> {
     try {
       const cart = await this.cartModel.findOne({ user: userId });
-      if (!cart) throw new NotFoundException('Cart not found');
+      if (!cart) throw new NotFoundException('Cart not found!');
 
       cart.products = cart.products.filter((id) => id.toString() !== productId);
 
@@ -67,8 +62,10 @@ export class CartService {
 
       return cart;
     } catch (error) {
-      console.error(`Error removing from cart: ${error.message}`);
-      throw new Error('Could not remove from cart');
+      console.error(`Error removing from cart: ${error.message}!`);
+      throw new BadRequestException(
+        `Could not remove from cart: ${error.message}`,
+      );
     }
   }
 
@@ -77,7 +74,7 @@ export class CartService {
     if (!cart) throw new NotFoundException('Cart not found');
 
     if (cart.products.length === 0) {
-      throw new NotFoundException('Cart is already empty');
+      throw new NotFoundException('Cart is already empty!');
     }
 
     cart.products = [];

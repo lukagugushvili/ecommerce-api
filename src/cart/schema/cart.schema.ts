@@ -14,7 +14,7 @@ export class Cart extends Document {
   @Field(() => User)
   user: Types.ObjectId;
 
-  @Prop([{ type: Types.ObjectId, ref: 'Product', default: [] }])
+  @Prop({ type: [Types.ObjectId], ref: 'Product', default: [] })
   @Field(() => [Product])
   products: Types.ObjectId[];
 

@@ -21,7 +21,7 @@ export class UsersService {
         email: createUserInput.email,
       });
 
-      if (emailInUse) throw new BadRequestException('Email already exists');
+      if (emailInUse) throw new BadRequestException('Email already exists!');
 
       const user = await this.userModel.create({
         ...createUserInput,
@@ -31,15 +31,15 @@ export class UsersService {
 
       return user;
     } catch (error) {
-      console.error(`Error creating user: ${error.message}`);
-      throw new BadRequestException('Could not create user');
+      console.error(`Error creating user: ${error.message}!`);
+      throw new BadRequestException(`Could not create user: ${error.message}!`);
     }
   }
 
   async findUserByEmail(email: string): Promise<User> {
     const user = await this.userModel.findOne({ email }).exec();
 
-    if (!user) throw new NotFoundException('User not found');
+    if (!user) throw new NotFoundException('User not found!');
 
     return user;
   }

@@ -9,7 +9,6 @@ export class CreatePaymentInput {
   amount: number;
 
   @Field()
-  @IsNotEmpty()
   @IsString()
   currency: string = 'usd';
 }

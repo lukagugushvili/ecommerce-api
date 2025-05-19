@@ -11,6 +11,7 @@ import { Model } from 'mongoose';
 import { CartService } from 'src/cart/cart.service';
 import { OrderStatus } from 'src/enums/product-status.enum';
 import { UpdatePaymentStatusInput } from './dto/update-payment-status.input';
+import { PaymentStatus } from 'src/enums/payment-status.enum';
 
 @Injectable()
 export class OrdersService {
@@ -24,29 +25,24 @@ export class OrdersService {
       const cart = await this.cartService.getCart(userId);
 
       if (!cart || cart.products.length === 0) {
-        throw new BadGatewayException('Cart is empty');
+        throw new BadGatewayException('Cart is empty!');
       }
 
       const order = new this.orderModel({
         user: userId,
         products: cart.products,
         totalPrice: cart.totalPrice,
-        status: 'pending',
+        status: PaymentStatus.PENDING,
       });
 
+      await order.populate(['user', 'products']);
+
       await order.save();
-      await (
-        await order.populate({
-          path: 'products',
-          model: 'Product',
-          select: 'name price description',
-        })
-      ).populate('user');
 
       return order;
     } catch (error) {
-      console.error(`Error creating order: ${error.message}`);
-      throw new NotFoundException('Could not create order');
+      console.error(`Error creating order: ${error.message}!`);
+      throw new NotFoundException(`Could not create order: ${error.message}`);
     }
   }
 
@@ -54,22 +50,18 @@ export class OrdersService {
     try {
       const orders = this.orderModel
         .find({ user: userId })
-        .populate({
-          path: 'products',
-          model: 'Product',
-          select: 'name price description',
-        })
+        .populate('products')
         .exec();
 
       if (!orders) {
-        throw new NotFoundException('No orders found for this user');
+        throw new NotFoundException('No orders found for this user!');
       }
 
       return orders;
     } catch (error) {
-      console.error(`Error getting orders: ${error.message}`);
+      console.error(`Error getting orders: ${error.message}!`);
       throw new InternalServerErrorException(
-        `Failed to retrieve orders: ${error.message}`,
+        `Failed to retrieve orders: ${error.message}!`,
       );
     }
   }
@@ -80,20 +72,20 @@ export class OrdersService {
   ): Promise<Order> {
     try {
       if (!Object.values(OrderStatus).includes(status)) {
-        throw new BadRequestException(`Invalid order status: ${status}`);
+        throw new BadRequestException(`Invalid order status: ${status}!`);
       }
 
       const order = await this.orderModel
         .findByIdAndUpdate(orderId, { status }, { new: true })
         .exec();
 
-      if (!order) throw new NotFoundException('Order not found');
+      if (!order) throw new NotFoundException('Order not found!');
 
       return order;
     } catch (error) {
-      console.error(`Error updating order status: ${error.message}`);
+      console.error(`Error updating order status: ${error.message}!`);
       throw new InternalServerErrorException(
-        `Failed to update order status: ${error.message}`,
+        `Failed to update order status: ${error.message}!`,
       );
     }
   }
@@ -112,13 +104,13 @@ export class OrdersService {
         )
         .exec();
 
-      if (!updateStatus) throw new NotFoundException('Order not found');
+      if (!updateStatus) throw new NotFoundException('Order not found!');
 
       return updateStatus;
     } catch (error) {
-      console.error(`Error updating payment status: ${error.message}`);
+      console.error(`Error updating payment status: ${error.message}!`);
       throw new InternalServerErrorException(
-        `Failed to update payment status: ${error.message}`,
+        `Failed to update payment status: ${error.message}!`,
       );
     }
   }

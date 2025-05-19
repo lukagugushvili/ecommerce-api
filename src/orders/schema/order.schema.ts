@@ -16,7 +16,7 @@ export class Order extends Document {
   @Field(() => User)
   user: Types.ObjectId;
 
-  @Prop([{ type: Types.ObjectId, ref: 'Product', required: true }])
+  @Prop({ type: [Types.ObjectId], ref: 'Product', required: true })
   @Field(() => [Product])
   products: Types.ObjectId[];
 

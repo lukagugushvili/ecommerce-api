@@ -35,15 +35,15 @@ export class PaymentsService {
 
       if (!paymentIntent.client_secret) {
         throw new InternalServerErrorException(
-          'Failed to generate client_secret',
+          'Failed to generate client_secret!',
         );
       }
 
       return { client_secret: paymentIntent.client_secret };
     } catch (error) {
-      console.error(`Error create payment intent: ${error.message}`);
+      console.error(`Error create payment intent: ${error.message}!`);
       throw new InternalServerErrorException(
-        `Payment failed: ${error.message}`,
+        `Payment failed: ${error.message}!`,
       );
     }
   }

@@ -23,9 +23,9 @@ export class ProductsService {
 
       return createdProduct;
     } catch (error) {
-      console.error(`Error creating product: ${error.message}`);
+      console.error(`Error creating product: ${error.message}!`);
       throw new BadRequestException(
-        `Could not create product: ${error.message}`,
+        `Could not create product: ${error.message}!`,
       );
     }
   }
@@ -34,7 +34,7 @@ export class ProductsService {
     const products = await this.productModel.find().populate('category').exec();
 
     if (!products || products.length === 0) {
-      throw new NotFoundException('Products not found');
+      throw new NotFoundException('Products not found!');
     }
 
     return products;
@@ -46,7 +46,7 @@ export class ProductsService {
       .populate('category')
       .exec();
 
-    if (!product) throw new NotFoundException('Product not found');
+    if (!product) throw new NotFoundException('Product not found!');
 
     return product;
   }
@@ -62,7 +62,7 @@ export class ProductsService {
         .exec();
 
       if (!updateProduct) {
-        throw new NotFoundException(`Product with ID: ${id} not found`);
+        throw new NotFoundException(`Product with ID: ${id} not found!`);
       }
 
       return {
@@ -70,9 +70,9 @@ export class ProductsService {
         product: updateProduct,
       };
     } catch (error) {
-      console.error(`Error updating product: ${error.message}`);
+      console.error(`Error updating product: ${error.message}!`);
       throw new BadRequestException(
-        `Could not update product: ${error.message}`,
+        `Could not update product: ${error.message}!`,
       );
     }
   }
@@ -84,7 +84,7 @@ export class ProductsService {
         .exec();
 
       if (!removedProduct) {
-        throw new NotFoundException(`Product with ID: "${id}" not found`);
+        throw new NotFoundException(`Product with ID: "${id}" not found!`);
       }
 
       return {
@@ -92,9 +92,9 @@ export class ProductsService {
         product: removedProduct,
       };
     } catch (error) {
-      console.error(`Error removing product: ${error.message}`);
+      console.error(`Error removing product: ${error.message}!`);
       throw new BadRequestException(
-        `Could not remove product: ${error.message}`,
+        `Could not remove product: ${error.message}!`,
       );
     }
   }
