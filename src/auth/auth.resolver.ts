@@ -5,6 +5,8 @@ import { RegisterResponse } from './responses/register.response';
 import { LoginResponse } from './responses/login.response';
 import { LoginInput } from './dto/login.input';
 import { User } from 'src/users/schema/user.schema';
+import { UseGuards } from '@nestjs/common';
+import { GqlLocalAuthGuard } from 'src/guards/local-auth.guard';
 
 @Resolver(() => User)
 export class AuthResolver {
@@ -17,6 +19,7 @@ export class AuthResolver {
     return this.authService.register(registerUser);
   }
 
+  @UseGuards(GqlLocalAuthGuard)
   @Mutation(() => LoginResponse, { name: 'login' })
   async login(
     @Args('loginInput') loginInput: LoginInput,

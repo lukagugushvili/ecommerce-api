@@ -2,7 +2,10 @@ import { Args, Mutation, Resolver, Query, ID } from '@nestjs/graphql';
 import { CartService } from './cart.service';
 import { Cart } from './schema/cart.schema';
 import { ClearCartResponse } from './responses/clear-cart.response';
+import { UseGuards } from '@nestjs/common';
+import { GqlJwtAuthGuard } from 'src/guards/jwt-auth.guard';
 
+@UseGuards(GqlJwtAuthGuard)
 @Resolver(() => Cart)
 export class CartResolver {
   constructor(private readonly cartService: CartService) {}

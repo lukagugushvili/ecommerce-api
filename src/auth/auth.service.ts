@@ -1,7 +1,6 @@
 import {
   BadRequestException,
   Injectable,
-  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { CreateUserInput } from 'src/users/dto/create-user.input';
@@ -70,13 +69,11 @@ export class AuthService {
     const user = await this.userService.findUserByEmail(email);
     if (!user) return null;
 
-    console.log('user', user);
-
     const arePasswordsEqual = await bcrypt.compare(password, user.password);
     if (!arePasswordsEqual) return null;
 
-    console.log('arePasswordsEqual', arePasswordsEqual);
+    const { password: _, ...result } = user.toObject();
 
-    return user;
+    return result;
   }
 }
