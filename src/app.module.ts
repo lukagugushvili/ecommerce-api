@@ -1,6 +1,35 @@
 import { Module } from '@nestjs/common';
+import { ProductsModule } from './products/products.module';
+import { MongooseModule } from '@nestjs/mongoose';
+import { ConfigModule } from '@nestjs/config';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { CategoriesModule } from './categories/categories.module';
+import { UsersModule } from './users/users.module';
+import { CartModule } from './cart/cart.module';
+import { OrdersModule } from './orders/orders.module';
+import { PaymentsModule } from './payments/payments.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [],
+  imports: [
+    ConfigModule.forRoot(),
+    MongooseModule.forRoot(
+      process.env.MONGO_URL || 'mongodb://localhost:27017',
+    ),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      playground: true,
+      autoSchemaFile: 'src/gql/schema.graphql',
+      context: ({ req }) => ({ req }),
+    }),
+    ProductsModule,
+    CategoriesModule,
+    UsersModule,
+    CartModule,
+    OrdersModule,
+    PaymentsModule,
+    AuthModule,
+  ],
 })
 export class AppModule {}

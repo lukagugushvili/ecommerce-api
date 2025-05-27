@@ -1,0 +1,173 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Category {
+  _id: ID!
+  name: String!
+  description: String
+}
+
+type Product {
+  _id: ID!
+  name: String!
+  description: String!
+  price: Int!
+  category: Category
+  stock: Int!
+  images: [String!]!
+}
+
+type UpdateProductResponse {
+  message: String!
+  product: Product!
+}
+
+type RemoveProductResponse {
+  message: String!
+  product: Product
+}
+
+type UpdateCategoryResponse {
+  message: String!
+  category: Category!
+}
+
+type RemoveCategoryResponse {
+  message: String!
+  category: Category!
+}
+
+type User {
+  _id: ID!
+  role: UserRoles!
+  userName: String!
+  email: String!
+  password: String!
+}
+
+"""Roles for users"""
+enum UserRoles {
+  USER
+  ADMIN
+}
+
+type Cart {
+  _id: ID!
+  user: User!
+  products: [Product!]!
+  totalPrice: Int!
+}
+
+type ClearCartResponse {
+  message: String!
+}
+
+type Order {
+  _id: ID!
+  user: User!
+  products: [Product!]!
+  totalPrice: Int!
+  status: OrderStatus!
+  paymentStatus: PaymentStatus!
+}
+
+"""Order status enum"""
+enum OrderStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+}
+
+"""Payment status enum"""
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+}
+
+type PaymentResponse {
+  client_secret: String
+}
+
+type RegisterResponse {
+  message: String!
+  ID: String!
+}
+
+type LoginResponse {
+  message: String!
+  access_token: String!
+}
+
+type Query {
+  products: [Product!]!
+  product(id: ID!): Product!
+  categories: [Category!]!
+  category(id: ID!): Category!
+  getCart(userId: ID!): Cart
+  orders(userId: ID!): [Order!]!
+}
+
+type Mutation {
+  createProduct(createProductInput: CreateProductInput!): Product!
+  updateProduct(id: ID!, updateProductInput: UpdateProductInput!): UpdateProductResponse!
+  removeProduct(id: ID!): RemoveProductResponse!
+  createCategory(createCategoryInput: CreateCategoryInput!): Category!
+  updateCategory(id: ID!, updateCategoryInput: UpdateCategoryInput!): UpdateCategoryResponse!
+  removeCategory(id: ID!): RemoveCategoryResponse!
+  createUser(createUserInput: CreateUserInput!): User!
+  addToCart(userId: ID!, productId: ID!): Cart!
+  removeFromCart(userId: ID!, productId: ID!): Cart!
+  clearCart(userId: ID!): ClearCartResponse!
+  createOrder(userId: ID!): Order!
+  updateOrderStatus(orderId: ID!, status: OrderStatus!): Order!
+  updatePaymentStatus(updatePaymentStatusInput: UpdatePaymentStatusInput!): Order!
+  payment(amount: Float!): PaymentResponse!
+  register(registerUser: CreateUserInput!): RegisterResponse!
+  login(loginInput: LoginInput!): LoginResponse!
+}
+
+input CreateProductInput {
+  name: String!
+  description: String!
+  price: Int!
+  category: String
+  stock: Int!
+  images: [String!]!
+}
+
+input UpdateProductInput {
+  name: String
+  description: String
+  price: Int
+  category: String
+  stock: Int
+  images: [String!]
+}
+
+input CreateCategoryInput {
+  name: String!
+  description: String
+}
+
+input UpdateCategoryInput {
+  name: String
+  description: String
+}
+
+input CreateUserInput {
+  userName: String!
+  email: String!
+  password: String!
+}
+
+input UpdatePaymentStatusInput {
+  orderId: String!
+  paymentStatus: PaymentStatus!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
